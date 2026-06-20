@@ -165,8 +165,6 @@
         }
         .add-btn.friends-btn { border-color: #ff7494; color: #ff7494; }
         .add-btn.friends-btn:hover { background: #ff7494; color: white; }
-        .add-btn.setup-btn { border-color: #28a745; color: #28a745; }
-        .add-btn.setup-btn:hover { background: #28a745; color: white; }
 
         /* الأقسام وشبكات العرض */
         .section-title {
@@ -315,7 +313,7 @@
         .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-cancel { background: rgba(0,0,0,0.08); color: inherit; }
 
-        /* 🌌 شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف */
+        /* شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف */
         .viewer-content {
             background: var(--modal-bg);
             backdrop-filter: blur(30px);
@@ -343,10 +341,9 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* 🖼️ احتواء الصورة بالكامل وحمايتها من التمدد أو القطع */
         .viewer-img-wrapper {
             width: 100%;
-            height: 52vh; /* تحديد ارتفاع مناسب متناسق مع حجم الشاشة */
+            height: 52vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -361,7 +358,7 @@
         .viewer-content img {
             max-height: 100%;
             max-width: 100%;
-            object-fit: contain; /* احتواء كامل الصورة بنسبها الصحيحة وبدون قص */
+            object-fit: contain;
             border-radius: 12px;
             transition: transform 0.3s ease, filter 0.3s ease;
             display: block;
@@ -428,14 +425,13 @@
         @media (max-width: 768px) {
             .nav-arrow { display: none; }
             .viewer-content { width: 95%; padding: 15px; }
-            .viewer-img-wrapper { height: 45vh; } /* تهيئة مرنة للشاشات الصغيرة */
+            .viewer-img-wrapper { height: 45vh; }
         }
     </style>
 </head>
 <body>
 
     <div class="gallery-container">
-        <!-- لوحة الألوان المحسنة بالثيم الليلي الجديد والداكن -->
         <div class="controls-panel">
             <button class="palette-btn" id="paletteBtn" title="اختر لون المعرض">🎀</button>
             <div class="colors-box" id="colorsBox">
@@ -453,7 +449,6 @@
                 <div class="buttons-container">
                     <button class="add-btn" id="openModalBtn">🎨 إضافة لوحة جديدة</button>
                     <button class="add-btn friends-btn" id="openFriendModalBtn">🦋 رسمة صديقة</button>
-                    <button class="add-btn setup-btn" id="openSetupModalBtn">⚙️ إعدادات GitHub</button>
                 </div>
             </div>
         </header>
@@ -465,7 +460,6 @@
         <main class="gallery-grid" id="friendsGalleryGrid"></main>
     </div>
 
-    <!-- 🔒 نافذة طلب كلمة السر الفوقية الذكية -->
     <div class="modal" id="passwordModal">
         <div class="modal-content" style="max-width: 360px; text-align: center;">
             <h2 style="font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🔒 حماية الخصوصية</h2>
@@ -480,31 +474,6 @@
         </div>
     </div>
 
-    <!-- ⚙️ نافذة إعدادات جيتهاب السرية -->
-    <div class="modal" id="setupModal">
-        <div class="modal-content">
-            <h2>⚙️ ربط المعرض بحساب GitHub</h2>
-            <div class="form-group">
-                <label for="gitUsername">اسم المستخدم (GitHub Username):</label>
-                <input type="text" id="gitUsername" placeholder="مثال: HusseinRepo">
-            </div>
-            <div class="form-group">
-                <label for="gitRepo">اسم المستودع (Repository Name):</label>
-                <input type="text" id="gitRepo" placeholder="مثال: jody-gallery">
-            </div>
-            <div class="form-group">
-                <label for="gitToken">رمز الوصول الخاص (GitHub PAT Token):</label>
-                <input type="password" id="gitToken" placeholder="ghp_xxxxxxxxxxxxxxxx">
-            </div>
-            <p style="font-size:0.8rem; color:red; text-align:right;">* يتم حفظ هذه البيانات محلياً في متصفحك الحالي فقط لضمان الأمان.</p>
-            <div class="modal-actions">
-                <button class="btn btn-cancel" id="closeSetupModalBtn">إلغاء</button>
-                <button class="btn btn-submit" id="saveSetupBtn">حفظ البيانات</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة إضافة لوحة جديدة زجاجية -->
     <div class="modal" id="addModal">
         <div class="modal-content">
             <h2>✨ إضافة إداء جديد</h2>
@@ -517,7 +486,7 @@
                 <input type="file" id="artImage" accept="image/*" style="display: none;">
                 <div class="file-custom-btn" id="fileTrigger">📸 اضغط هنا لاختيار صورة</div>
                 <div class="ai-loading-bar" id="aiLoadingBar">
-                    <span id="uploadStatusText">✨ جاري معالجة ورفع الصورة للـ GitHub...</span>
+                    <span id="uploadStatusText">✨ جاري حفظ الصورة محلياً...</span>
                     <div class="ai-progress-track"><div class="ai-progress-fill" id="aiProgressFill"></div></div>
                 </div>
             </div>
@@ -528,7 +497,6 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة رسمة صديق زجاجية -->
     <div class="modal" id="addFriendModal">
         <div class="modal-content">
             <h2 style="color: #ff7494;">🌸 إضافة رسمة صديقة جديدة</h2>
@@ -545,7 +513,7 @@
                 <input type="file" id="friendArtImage" accept="image/*" style="display: none;">
                 <div class="file-custom-btn" id="friendFileTrigger" style="border-color: #ff7494; color: #ff7494;">📸 اضغط هنا لاختيار الصورة</div>
                 <div class="ai-loading-bar" id="friendAiLoadingBar">
-                    <span id="friendUploadStatusText" style="color: #ff7494;">✨ جاري رفع الصورة ومزامنتها...</span>
+                    <span id="friendUploadStatusText" style="color: #ff7494;">✨ جاري المعالجة والحفظ...</span>
                     <div class="ai-progress-track"><div class="ai-progress-fill" id="friendAiProgressFill" style="background: #ff7494;"></div></div>
                 </div>
             </div>
@@ -556,15 +524,12 @@
         </div>
     </div>
 
-    <!-- شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف -->
     <div class="modal" id="viewModal">
         <div class="viewer-content">
             
-            <!-- أسهم التحرك يمين ويسار للكمبيوتر -->
             <div class="nav-arrow arrow-right" id="prevImageBtn" title="الصورة السابقة">➔</div>
             <div class="nav-arrow arrow-left" id="nextImageBtn" title="الصورة التالية">➔</div>
 
-            <!-- الشريط العلوي الذكي للمعلومات والأدوات -->
             <div class="viewer-top-bar">
                 <div class="viewer-meta-info">
                     <div class="viewer-friend" id="viewerFriendName">الصديقة: </div>
@@ -586,7 +551,6 @@
                 </div>
             </div>
 
-            <!-- حاوية الصورة الفنية لدعم اللمس والسحب -->
             <div class="viewer-img-wrapper" id="viewerImgWrapper">
                 <img id="viewerImage" src="" alt="">
             </div>
@@ -594,7 +558,6 @@
         </div>
     </div>
 
-    <!-- نافذة تعديل بيانات اللوحة زجاجية مخصصة -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h2>✏️ تعديل بيانات اللوحة</h2>
@@ -611,7 +574,7 @@
                 <input type="file" id="editArtImage" accept="image/*" style="display: none;">
                 <div class="file-custom-btn" id="editFileTrigger">📸 اضغط هنا لتغيير الصورة الحالية</div>
                 <div class="ai-loading-bar" id="editAiLoadingBar">
-                    <span id="editUploadStatusText">✨ جاري تحديث وتهيئة الصورة الجديدة...</span>
+                    <span id="editUploadStatusText">✨ جاري معالجة وتحديث الصورة...</span>
                     <div class="ai-progress-track"><div class="ai-progress-fill" id="editAiProgressFill"></div></div>
                 </div>
             </div>
@@ -650,7 +613,7 @@
                 passwordModal.classList.remove('show');
                 if (passwordCallback) passwordCallback(); 
             } else {
-                alert("❌ كلمة السر خاطئة! حاول مجدداً لحماية الملفات.");
+                alert("❌ كلمة السر خاطئة! حاول مجدداً.");
             }
         }
 
@@ -693,87 +656,23 @@
             });
         });
 
-        // إعدادات GitHub الأساسية
-        const openSetupModalBtn = document.getElementById('openSetupModalBtn');
-        const closeSetupModalBtn = document.getElementById('closeSetupModalBtn');
-        const setupModal = document.getElementById('setupModal');
-        const saveSetupBtn = document.getElementById('saveSetupBtn');
-        const gitUsernameInput = document.getElementById('gitUsername');
-        const gitRepoInput = document.getElementById('gitRepo');
-        const gitTokenInput = document.getElementById('gitToken');
+        // دالة تحويل ومعالجة الصورة محلياً لتعمل بمسار نسبي بجوار صفحة index
+        function processLocalImage(file, statusTextEl, progressFillEl, callback) {
+            statusTextEl.innerText = "⏳ جاري إعداد وتجهيز الصورة...";
+            progressFillEl.style.width = "50%";
 
-        openSetupModalBtn.addEventListener('click', () => {
-            gitUsernameInput.value = localStorage.getItem('git_username') || '';
-            gitRepoInput.value = localStorage.getItem('git_repo') || '';
-            gitTokenInput.value = localStorage.getItem('git_token') || '';
-            setupModal.classList.add('show');
-        });
-        closeSetupModalBtn.addEventListener('click', () => setupModal.classList.remove('show'));
-        saveSetupBtn.addEventListener('click', () => {
-            localStorage.setItem('git_username', gitUsernameInput.value.trim());
-            localStorage.setItem('git_repo', gitRepoInput.value.trim());
-            localStorage.setItem('git_token', gitTokenInput.value.trim());
-            alert('✨ تم حفظ إعدادات GitHub بنجاح في متصفحك!');
-            setupModal.classList.remove('show');
-        });
-
-        // دالة رفع الصور لـ GitHub API المباشرة
-        async function uploadImageToGitHub(file, statusTextEl, progressFillEl) {
-            const username = localStorage.getItem('git_username');
-            const repo = localStorage.getItem('git_repo');
-            const token = localStorage.getItem('git_token');
-
-            if (!username || !repo || !token) {
-                alert('⚠️ يرجى ضبط إعدادات GitHub أولاً عن طريق زر الترس الأخضر!');
-                throw new Error('Missing git settings');
-            }
-
-            statusTextEl.innerText = "⏳ جاري تهيئة ملف الصورة...";
-            progressFillEl.style.width = "30%";
-
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = async function () {
-                    try {
-                        const base64Raw = reader.result.split(',')[1];
-                        const fileName = Date.now() + "_" + file.name.replace(/\s+/g, '_');
-                        // المسار المباشر للفولدر الجانبي
-                        const url = `https://api.github.com/repos/${username}/${repo}/contents/gallery_images/${fileName}`;
-
-                        statusTextEl.innerText = "🚀 جاري الرفع المباشر إلى مستودع GitHub...";
-                        progressFillEl.style.width = "60%";
-
-                        const response = await fetch(url, {
-                            method: "PUT",
-                            headers: {
-                                "Authorization": `token ${token}`,
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                message: `ألبوم جودي: إضافة صورة ${fileName}`,
-                                content: base64Raw
-                            })
-                        });
-
-                        if (response.ok) {
-                            const resData = await response.json();
-                            progressFillEl.style.width = "100%";
-                            statusTextEl.innerText = "✨ اكتمل الرفع بنجاح ومزامنة السيرفر!";
-                            // إرجاع الرابط المباشر من خوادم GitHub (أو جيت هاب بيدجيز)
-                            resolve(resData.content.download_url);
-                        } else {
-                            const errData = await response.json();
-                            reject(errData.message || 'خطأ في الرفع');
-                        }
-                    } catch (err) {
-                        reject(err);
-                    }
-                };
-                reader.onerror = error => reject(error);
-            });
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                progressFillEl.style.width = "100%";
+                statusTextEl.innerText = "✨ تم الحفظ والمعالجة!";
+                
+                // صياغة اسم الصورة المباشر والنسبي ليتناسب مع مجلد الصور على GitHub
+                const relativePath = "gallery_images/" + file.name.replace(/\s+/g, '_');
+                
+                callback(reader.result, relativePath);
+            };
         }
-
 
         const openModalBtn = document.getElementById('openModalBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
@@ -831,7 +730,7 @@
         const editUploadStatusText = document.getElementById('editUploadStatusText');
 
         let selectedImageSrc = ''; let friendImageSrc = ''; let editImageSrc = '';
-        let currentFileObj = null; let friendFileObj = null; let editFileObj = null;
+        let selectedRelativePath = ''; let friendRelativePath = ''; let editRelativePath = '';
 
         menuToggleBtn.addEventListener('click', () => { menuToggleBtn.classList.toggle('active'); hiddenToolsMenu.classList.toggle('show'); });
 
@@ -846,10 +745,13 @@
             let badgeHtml = item.type === 'friend' ? `<div class="friend-badge-tag">🦋 صديقة</div>` : '';
             let friendInfoHtml = item.type === 'friend' ? `<div class="friend-name">👤 الصديقة: ${item.friendName}</div>` : '';
 
+            // العرض يدعم مسار الصورة المرفوع بجانب الفولدر، وفي حال عدم وجوده كاش باك يعتمد على الـ Base64
+            const finalDisplaySrc = item.relativePath || item.image;
+
             galleryItem.innerHTML = `
                 ${badgeHtml}
                 <div class="gallery-item-img-container">
-                    <img src="${item.image}" alt="${item.title}" class="${aiClass}">
+                    <img src="${finalDisplaySrc}" alt="${item.title}" class="${aiClass}">
                 </div>
                 <div class="img-info">
                     ${friendInfoHtml}
@@ -875,34 +777,34 @@
         fileTrigger.addEventListener('click', () => artImageInput.click());
         artImageInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
-                currentFileObj = e.target.files[0];
-                fileTrigger.innerText = `📸 تم اختيار: ${currentFileObj.name}`;
+                aiLoadingBar.style.display = 'block';
+                processLocalImage(e.target.files[0], uploadStatusText, aiProgressFill, (base64, relPath) => {
+                    selectedImageSrc = base64;
+                    selectedRelativePath = relPath;
+                    fileTrigger.innerText = `📸 تم اختيار: ${e.target.files[0].name}`;
+                    aiLoadingBar.style.display = 'none';
+                    aiProgressFill.style.width = '0%';
+                });
             }
         });
 
-        saveArtBtn.addEventListener('click', async () => {
+        saveArtBtn.addEventListener('click', () => {
             const title = artTitleInput.value.trim();
-            if (!title || !currentFileObj) { alert('من فضلكِ أكملي البيانات الفنية واختاري صورة أولاً يا جودي 🌸'); return; }
+            if (!title || !selectedImageSrc) { alert('من فضلكِ أكملي البيانات واختاري صورة أولاً يا جودي 🌸'); return; }
             
-            try {
-                aiLoadingBar.style.display = 'block';
-                saveArtBtn.disabled = true;
-                
-                // الرفع لـ جيتهاب وجلب الرابط المباشر
-                const gitImageUrl = await uploadImageToGitHub(currentFileObj, uploadStatusText, aiProgressFill);
-                
-                const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                savedGalleryItems.unshift({ id: Date.now().toString(), type: 'personal', title: title, image: gitImageUrl, date: today, aiEnhanced: false });
-                
-                saveToLocalStorage(); loadGalleryFromCache(); addModal.classList.remove('show');
-                artTitleInput.value = ''; currentFileObj = null; fileTrigger.innerText = '📸 اضغط هنا لاختيار صورة';
-            } catch (err) {
-                alert('❌ حدث خطأ أثناء الرفع إلى GitHub: ' + err);
-            } finally {
-                aiLoadingBar.style.display = 'none';
-                aiProgressFill.style.width = '0%';
-                saveArtBtn.disabled = false;
-            }
+            const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            savedGalleryItems.unshift({ 
+                id: Date.now().toString(), 
+                type: 'personal', 
+                title: title, 
+                image: selectedImageSrc, 
+                relativePath: selectedRelativePath,
+                date: today, 
+                aiEnhanced: false 
+            });
+            
+            saveToLocalStorage(); loadGalleryFromCache(); addModal.classList.remove('show');
+            artTitleInput.value = ''; selectedImageSrc = ''; selectedRelativePath = ''; fileTrigger.innerText = '📸 اضغط هنا لاختيار صورة';
         });
 
         openFriendModalBtn.addEventListener('click', () => { requirePassword(() => { addFriendModal.classList.add('show'); }); });
@@ -910,40 +812,42 @@
         friendFileTrigger.addEventListener('click', () => friendArtImageInput.click());
         friendArtImageInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
-                friendFileObj = e.target.files[0];
-                friendFileTrigger.innerText = `📸 تم اختيار: ${friendFileObj.name}`;
+                friendAiLoadingBar.style.display = 'block';
+                processLocalImage(e.target.files[0], friendUploadStatusText, friendAiProgressFill, (base64, relPath) => {
+                    friendImageSrc = base64;
+                    friendRelativePath = relPath;
+                    friendFileTrigger.innerText = `📸 تم اختيار: ${e.target.files[0].name}`;
+                    friendAiLoadingBar.style.display = 'none';
+                    friendAiProgressFill.style.width = '0%';
+                });
             }
         });
 
-        saveFriendArtBtn.addEventListener('click', async () => {
+        saveFriendArtBtn.addEventListener('click', () => {
             const name = friendNameInput.value.trim(); const title = friendArtTitleInput.value.trim();
-            if (!name || !title || !friendFileObj) { alert('من فضلكِ املئي الحقول المطلوبة واختاري صورة! ✨'); return; }
+            if (!name || !title || !friendImageSrc) { alert('من فضلكِ املئي الحقول المطلوبة واختاري صورة! ✨'); return; }
             
-            try {
-                friendAiLoadingBar.style.display = 'block';
-                saveFriendArtBtn.disabled = true;
-                
-                const gitImageUrl = await uploadImageToGitHub(friendFileObj, friendUploadStatusText, friendAiProgressFill);
-                
-                const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                savedGalleryItems.unshift({ id: Date.now().toString(), type: 'friend', friendName: name, title: title, image: gitImageUrl, date: today, aiEnhanced: false });
-                
-                saveToLocalStorage(); loadGalleryFromCache(); addFriendModal.classList.remove('show');
-                friendNameInput.value = ''; friendArtTitleInput.value = ''; friendFileObj = null; friendFileTrigger.innerText = '📸 اضغط هنا لاختيار الصورة';
-            } catch (err) {
-                alert('❌ حدث خطأ أثناء رفع ملف الصديقة: ' + err);
-            } finally {
-                friendAiLoadingBar.style.display = 'none';
-                friendAiProgressFill.style.width = '0%';
-                saveFriendArtBtn.disabled = false;
-            }
+            const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            savedGalleryItems.unshift({ 
+                id: Date.now().toString(), 
+                type: 'friend', 
+                friendName: name, 
+                title: title, 
+                image: friendImageSrc, 
+                relativePath: friendRelativePath,
+                date: today, 
+                aiEnhanced: false 
+            });
+            
+            saveToLocalStorage(); loadGalleryFromCache(); addFriendModal.classList.remove('show');
+            friendNameInput.value = ''; friendArtTitleInput.value = ''; friendImageSrc = ''; friendRelativePath = ''; friendFileTrigger.innerText = '📸 اضغط هنا لاختيار الصورة';
         });
 
         function updateViewerContent() {
             const item = savedGalleryItems[activeIndex];
             if (!item) return;
 
-            viewerImage.src = item.image;
+            viewerImage.src = item.relativePath || item.image;
             viewerTitle.innerText = item.title;
             viewerDate.innerText = `📅 ${item.date}`;
 
@@ -997,11 +901,8 @@
 
         function handleSwipeGesture() {
             const swipeThreshold = 50; 
-            if (touchStartX - touchEndX > swipeThreshold) {
-                navigateNext();
-            } else if (touchEndX - touchStartX > swipeThreshold) {
-                navigatePrev();
-            }
+            if (touchStartX - touchEndX > swipeThreshold) navigateNext();
+            else if (touchEndX - touchStartX > swipeThreshold) navigatePrev();
         }
 
         aiEnhanceBtn.addEventListener('click', () => {
@@ -1009,7 +910,7 @@
                 savedGalleryItems[activeIndex].aiEnhanced = true; saveToLocalStorage();
                 updateViewerContent(); loadGalleryFromCache();
                 hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-                alert("🪄 تم معالجة الصورة الكاملة بمحرك الـ AI فلاتر الذكاء الفوري!");
+                alert("🪄 تم معالجة الصورة الفنية بنجاح!");
             });
         });
 
@@ -1017,15 +918,14 @@
             savedGalleryItems[activeIndex].aiEnhanced = false; saveToLocalStorage();
             updateViewerContent(); loadGalleryFromCache();
             hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-            alert("🔄 تم إلغاء تأثير الـ AI بنجاح.");
+            alert("🔄 تم استعادة الصورة الأصلية.");
         });
 
         deleteArtBtn.addEventListener('click', () => {
             requirePassword(() => {
-                if (confirm(`هل ترغبين بالتأكيد في حذف هذه اللوحة الفنية بشكل نهائي؟`)) {
+                if (confirm(`هل ترغبين بالتأكيد في حذف هذه اللوحة؟`)) {
                     savedGalleryItems.splice(activeIndex, 1); saveToLocalStorage(); loadGalleryFromCache();
-                    if (savedGalleryItems.length === 0) { viewModal.classList.remove('show'); } 
-                    else { navigateNext(); }
+                    if (savedGalleryItems.length === 0) viewModal.classList.remove('show'); else navigateNext();
                     hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
                 }
             });
@@ -1034,9 +934,10 @@
         editArtBtn.addEventListener('click', () => {
             requirePassword(() => {
                 const itemData = savedGalleryItems[activeIndex];
-                editArtTitleInput.value = itemData.title; editImageSrc = itemData.image;
+                editArtTitleInput.value = itemData.title; 
+                editImageSrc = itemData.image;
+                editRelativePath = itemData.relativePath || '';
                 editFileTrigger.innerText = '📸 اضغط هنا لتغيير الصورة الحالية'; editArtImageInput.value = '';
-                editFileObj = null;
                 
                 if (itemData.type === 'friend') {
                     editFriendNameGroup.style.display = 'block'; editFriendNameInput.value = itemData.friendName;
@@ -1052,36 +953,27 @@
         editFileTrigger.addEventListener('click', () => editArtImageInput.click());
         editArtImageInput.addEventListener('change', (e) => {
             if (e.target.files[0]) {
-                editFileObj = e.target.files[0];
-                editFileTrigger.innerText = `📸 تم اختيار: ${editFileObj.name}`;
+                editAiLoadingBar.style.display = 'block';
+                processLocalImage(e.target.files[0], editUploadStatusText, editAiProgressFill, (base64, relPath) => {
+                    editImageSrc = base64;
+                    editRelativePath = relPath;
+                    editFileTrigger.innerText = `📸 تم اختيار: ${e.target.files[0].name}`;
+                    editAiLoadingBar.style.display = 'none';
+                    editAiProgressFill.style.width = '0%';
+                });
             }
         });
 
-        updateArtBtn.addEventListener('click', async () => {
+        updateArtBtn.addEventListener('click', () => {
             const title = editArtTitleInput.value.trim(); if (!title) return;
-            
-            try {
-                let finalImgUrl = editImageSrc;
-                if (editFileObj) {
-                    editAiLoadingBar.style.display = 'block';
-                    updateArtBtn.disabled = true;
-                    finalImgUrl = await uploadImageToGitHub(editFileObj, editUploadStatusText, editAiProgressFill);
-                }
-
-                savedGalleryItems[activeIndex].title = title;
-                savedGalleryItems[activeIndex].image = finalImgUrl;
-                if (savedGalleryItems[activeIndex].type === 'friend') {
-                    savedGalleryItems[activeIndex].friendName = editFriendNameInput.value.trim();
-                }
-                saveToLocalStorage(); loadGalleryFromCache(); updateViewerContent();
-                editModal.classList.remove('show');
-            } catch(err) {
-                alert('❌ خطأ أثناء تحديث بيانات الصورة: ' + err);
-            } finally {
-                editAiLoadingBar.style.display = 'none';
-                editAiProgressFill.style.width = '0%';
-                updateArtBtn.disabled = false;
+            savedGalleryItems[activeIndex].title = title;
+            savedGalleryItems[activeIndex].image = editImageSrc;
+            savedGalleryItems[activeIndex].relativePath = editRelativePath;
+            if (savedGalleryItems[activeIndex].type === 'friend') {
+                savedGalleryItems[activeIndex].friendName = editFriendNameInput.value.trim();
             }
+            saveToLocalStorage(); loadGalleryFromCache(); updateViewerContent();
+            editModal.classList.remove('show');
         });
 
         window.addEventListener('click', (e) => {
