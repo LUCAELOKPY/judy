@@ -3,938 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرض إبداعات جودي ✨</title>
+    <title>إدارة المخزن والصيانة</title>
     <style>
         :root {
-            --bg-color: #fcf8ff;
-            --main-color: #6c4f93;
-            --text-color: #4a3e56;
-            --sub-color: #7b629e;
-            --shadow-color: rgba(142, 108, 191, 0.12);
-            --card-bg: rgba(255, 255, 255, 0.45);
-            --border-color: rgba(255, 255, 255, 0.4);
-            --header-bg: rgba(255, 255, 255, 0.5);
-            --modal-bg: rgba(255, 255, 255, 0.4);
-            --modal-text: #4a3e56;
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --border-color: #ddd;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23eadef7' fill-opacity='0.4'%3E%3Cpath d='M40 15c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3Cpath d='M40 35c-3-1-5-4-5-7 0-4 3-7 7-7 4 0 9 5 13 14-4 9-9 14-14 14-4 0-7-3-7-7 0-3 2-6 6-7z'/%3E%3Cpath d='M20 45c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3Cpath d='M60 45c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3C/g%3E%3C/svg%3E");
             color: var(--text-color);
+            margin: 0;
             padding: 20px;
-            min-height: 100vh;
-            transition: all 0.5s ease;
         }
-        .gallery-container {
-            max-width: 1200px;
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
-            position: relative;
-        }
-
-        /* أدوات التحكم ولوحة الألوان */
-        .controls-panel {
-            position: absolute;
-            top: 15px;
-            left: 20px;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .palette-btn {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 8px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        .palette-btn:hover { transform: scale(1.05); background: rgba(255, 255, 255, 0.6); }
-        .colors-box {
-            display: none;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 10px;
-            border-radius: 15px;
-            gap: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-        .colors-box.show { display: flex; }
-        .color-dot {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .color-dot:hover { transform: scale(1.2); }
-
-        header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding: 30px;
-            background: var(--header-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px 0 var(--shadow-color);
-            position: relative;
-            text-align: right;
-        }
-
-        .jody-profile-img {
-            width: 150px;
-            height: auto;
-            max-height: 180px;
-            border-radius: 16px;
-            object-fit: cover;
-            border: 3px solid var(--main-color);
-            box-shadow: 0 6px 20px var(--shadow-color);
-            flex-shrink: 0;
-        }
-
-        .header-content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            color: var(--main-color);
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.1);
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: var(--sub-color);
-            font-weight: 500;
-        }
-
-        .buttons-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-
-        .add-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 2px dashed var(--main-color);
-            color: var(--main-color);
-            padding: 10px 22px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-        .add-btn:hover {
-            background: var(--main-color);
-            color: #fff;
-            border-style: solid;
-            box-shadow: 0 5px 15px var(--shadow-color);
-            transform: scale(1.05);
-        }
-        .add-btn.friends-btn { border-color: #ff7494; color: #ff7494; }
-        .add-btn.friends-btn:hover { background: #ff7494; color: white; }
-
-        /* الأقسام وشبكات العرض */
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--main-color);
-            margin: 40px 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px dashed rgba(142, 108, 191, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        
-        .gallery-item {
             background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 24px var(--shadow-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            height: 350px;
-        }
-        .gallery-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px var(--shadow-color);
-        }
-
-        .gallery-item-img-container {
-            width: 100%;
-            height: 250px;
-            background: rgba(0,0,0,0.03);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 8px;
-        }
-
-        .gallery-item img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
-            display: block;
-            transition: filter 0.4s ease;
-        }
-        
-        .ai-enhanced-true {
-            filter: brightness(1.2) contrast(1.15) saturate(1.25) drop-shadow(0px 0px 12px rgba(212, 175, 55, 0.5)) !important;
-        }
-
-        .friend-badge-tag {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            background: linear-gradient(135deg, #ff7494, #ffa2b6);
-            color: white;
-            font-size: 0.75rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            z-index: 5;
-        }
-
-        .img-info {
-            padding: 12px;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.02);
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-        }
-        .img-info h3 {
-            font-size: 1.1rem;
-            color: var(--main-color);
-            font-weight: 600;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .img-info .friend-name { font-size: 0.85rem; color: #ff7494; font-weight: bold; margin-bottom: 3px; }
-        .img-info .date { font-size: 0.8rem; color: var(--sub-color); }
-
-        /* الشاشات المنبثقة العامة */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 8, 20, 0.45);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal.show { display: flex; }
-        
-        .modal-content {
-            background: var(--modal-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border-color);
             padding: 30px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 460px;
-            color: var(--modal-text);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.25), inset 0 1px 2px rgba(255,255,255,0.2);
-            position: relative;
-        }
-        .modal-content h2 { color: var(--main-color); margin-bottom: 20px; text-align: right; }
-
-        .form-group { margin-bottom: 18px; text-align: right; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--main-color); }
-        .form-group input[type="text"], .form-group input[type="password"] {
-            width: 100%; padding: 12px; border: 1px solid var(--border-color);
-            border-radius: 12px; background: rgba(255,255,255,0.15); color: inherit; outline: none;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .form-group input:focus { border-color: var(--main-color); background: rgba(255,255,255,0.3); }
-
-        .file-custom-btn {
-            display: block; width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed var(--main-color); border-radius: 12px; text-align: center; cursor: pointer; color: var(--sub-color);
-        }
-        
-        .ai-loading-bar { display: none; margin-top: 10px; font-size: 0.85rem; color: var(--main-color); font-weight: bold; text-align: center; }
-        .ai-progress-track { width: 100%; height: 6px; background: rgba(0,0,0,0.1); border-radius: 10px; margin-top: 5px; overflow: hidden; position: relative; }
-        .ai-progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff7494, var(--main-color)); transition: width 0.1s linear; }
-
-        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .btn-submit { background: var(--main-color); color: white; }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
-        .btn-cancel { background: rgba(0,0,0,0.08); color: inherit; }
-
-        /* 🌌 شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف */
-        .viewer-content {
-            background: var(--modal-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 720px;
-            height: auto;
-            max-height: 85vh;
-            color: var(--modal-text);
-            box-shadow: 0 24px 60px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            animation: fadeInModal 0.3s ease;
-        }
-        
-        @keyframes fadeInModal {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* 🖼️ احتواء الصورة بالكامل وحمايتها من التمدد أو القطع */
-        .viewer-img-wrapper {
-            width: 100%;
-            height: 52vh; /* تحديد ارتفاع مناسب متناسق مع حجم الشاشة */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            touch-action: pan-y;
-            margin-top: 65px;
-            background: rgba(0, 0, 0, 0.04);
-            border-radius: 16px;
-            overflow: hidden;
-            padding: 12px;
-        }
-        .viewer-content img {
-            max-height: 100%;
-            max-width: 100%;
-            object-fit: contain; /* احتواء كامل الصورة بنسبها الصحيحة وبدون قص */
             border-radius: 12px;
-            transition: transform 0.3s ease, filter 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
             display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
         }
 
-        /* أسهم التحرك الجانبية للنافذة المنبثقة الصغرى */
-        .nav-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 45px; height: 45px; background: var(--main-color);
-            color: white; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; cursor: pointer; z-index: 110; user-select: none; transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
-        .nav-arrow:hover { background: var(--sub-color); transform: translateY(-50%) scale(1.1); }
-        .nav-arrow.arrow-right { right: -22px; }
-        .nav-arrow.arrow-left { left: -22px; }
 
-        /* الشريط العلوي الذكي داخل النافذة */
-        .viewer-top-bar {
-            position: absolute; top: 15px; left: 15px; right: 15px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
-        .viewer-meta-info { text-align: right; }
-        .viewer-meta-info h2 { font-size: 1.2rem; color: var(--main-color); margin-bottom: 2px; }
-        .viewer-meta-info .viewer-friend { color: #ff7494; font-weight: bold; font-size: 0.85rem; }
-        .viewer-meta-info p { color: var(--sub-color); font-size: 0.75rem; }
 
-        .viewer-actions-container { display: flex; gap: 10px; align-items: center; position: relative; }
-
-        .btn-menu-toggle {
-            width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,0.05);
-            color: var(--text-color); border: 1px solid var(--border-color); font-size: 1.1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: all 0.3s;
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
         }
-        .btn-menu-toggle.active { transform: rotate(45deg); background: var(--main-color); color: white; }
 
-        .hidden-tools-menu {
-            position: absolute; top: 45px; left: 0; background: var(--modal-bg); backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color); padding: 8px; border-radius: 14px;
-            display: flex; flex-direction: column; gap: 6px; opacity: 0; visibility: hidden;
-            transform: translateY(-10px); transition: all 0.3s ease; min-width: 150px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        .btn-submit:hover {
+            background-color: #1a252f;
         }
-        .hidden-tools-menu.show { opacity: 1; visibility: visible; transform: translateY(0); }
 
-        .action-icon-btn {
-            width: 100%; padding: 8px 12px; border-radius: 10px; border: none; cursor: pointer;
-            font-size: 0.85rem; font-weight: bold; display: flex; align-items: center; gap: 8px; color: white; text-align: right;
+        .row {
+            display: flex;
+            gap: 20px;
         }
-        .btn-ai-trigger { background: #6c4f93; }
-        .btn-reset-trigger { background: #495057; }
-        .btn-edit-trigger { background: #e0a800; color: #000; }
-        .btn-delete-trigger { background: #dc3545; }
 
-        .close-viewer-btn {
-            width: 38px; height: 38px; background: rgba(0,0,0,0.05); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-color); cursor: pointer;
-            border: 1px solid var(--border-color); transition: all 0.2s;
+        .col {
+            flex: 1;
         }
-        .close-viewer-btn:hover { background: #dc3545; color: white; }
 
-        #passwordModal { z-index: 2000; background: rgba(0, 0, 0, 0.65); }
-
-        @media (max-width: 768px) {
-            .nav-arrow { display: none; }
-            .viewer-content { width: 95%; padding: 15px; }
-            .viewer-img-wrapper { height: 45vh; } /* تهيئة مرنة للشاشات الصغيرة */
+        @media (max-width: 600px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="gallery-container">
-        <!-- لوحة الألوان المحسنة بالثيم الليلي الجديد والداكن -->
-        <div class="controls-panel">
-            <button class="palette-btn" id="paletteBtn" title="اختر لون المعرض">🎀</button>
-            <div class="colors-box" id="colorsBox">
-                <div class="color-dot" style="background: #eadef7;" data-theme="purple" data-svg="%23eadef7" title="موف ناعم"></div>
-                <div class="color-dot" style="background: #ffdbe3;" data-theme="pink" data-svg="%23ffdbe3" title="وردي لطيف"></div>
-                <div class="color-dot" style="background: linear-gradient(135deg, #1f1235, #0f172a); border-color: #7b629e;" data-theme="darkNight" data-svg="%23583d72" title="الليل الساحر 🌌"></div>
+<div class="container">
+    <h2>تسجيل حركة صيانة ومخزن</h2>
+    <form id="maintenanceForm">
+        
+        <div class="row">
+            <!-- الكود / الباركود -->
+            <div class="col form-group">
+                <label for="itemCode">كود القطعة / الباركود:</label>
+                <input type="text" id="itemCode" required placeholder="امسح الباركود أو اكتب الكود">
             </div>
-        </div>
-
-        <header>
-            <img src="جودى.png" alt="جودي" class="jody-profile-img">
-            <div class="header-content">
-                <h1>معرض إبداعات جودي ✨</h1>
-                <!-- ✍️ تم تعديل السطر وحذف عبارة (وبلمسات الذكاء الاصطناعي) بناء على طلبك -->
-                <p>أهلاً بكم في عالمي الخاص، هنا أشارككم أجمل اللوحات والصور التي أبدعتها</p>
-                <div class="buttons-container">
-                    <button class="add-btn" id="openModalBtn">🎨 إضافة لوحة جديدة</button>
-                    <button class="add-btn friends-btn" id="openFriendModalBtn">🦋 رسمة صديقة</button>
-                </div>
-            </div>
-        </header>
-
-        <h2 class="section-title">💖 لوحاتي الفنية الخاصة</h2>
-        <main class="gallery-grid" id="galleryGrid"></main>
-
-        <h2 class="section-title" style="color: #ff7494;">👗 مجموعة صديقاتي المبدعات</h2>
-        <main class="gallery-grid" id="friendsGalleryGrid"></main>
-    </div>
-
-    <!-- 🔒 نافذة طلب كلمة السر الفوقية الذكية -->
-    <div class="modal" id="passwordModal">
-        <div class="modal-content" style="max-width: 360px; text-align: center;">
-            <h2 style="font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🔒 حماية الخصوصية</h2>
-            <div class="form-group" style="text-align: center;">
-                <label for="passwordInput" style="margin-bottom: 10px;">أدخلي كلمة السر الخاصة بكِ:</label>
-                <input type="password" id="passwordInput" placeholder="******" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
-            </div>
-            <div class="modal-actions" style="justify-content: center;">
-                <button class="btn btn-cancel" id="cancelPasswordBtn">إلغاء</button>
-                <button class="btn btn-submit" id="submitPasswordBtn">تأكيد ✨</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة إضافة لوحة جديدة زجاجية -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <h2>✨ إضافة إداء جديد</h2>
-            <div class="form-group">
-                <label for="artTitle">اسم اللوحة أو الرسمة:</label>
-                <input type="text" id="artTitle" placeholder="مثلاً: زهور الربيع 🌸">
-            </div>
-            <div class="form-group">
-                <label>اختر الصورة أو التقطها:</label>
-                <input type="file" id="artImage" accept="image/*" style="display: none;">
-                <div class="file-custom-btn" id="fileTrigger">📸 اضغط هنا لاختيار صورة</div>
-                <div class="ai-loading-bar" id="aiLoadingBar">
-                    <span>✨ جاري معالجة ورفع جودة الصورة بالـ AI...</span>
-                    <div class="ai-progress-track"><div class="ai-progress-fill" id="aiProgressFill"></div></div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-cancel" id="closeModalBtn">إلغاء</button>
-                <button class="btn btn-submit" id="saveArtBtn">إضافة للمعرض</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة إضافة رسمة صديق زجاجية -->
-    <div class="modal" id="addFriendModal">
-        <div class="modal-content">
-            <h2 style="color: #ff7494;">🌸 إضافة رسمة صديقة جديدة</h2>
-            <div class="form-group">
-                <label for="friendNameInput">اسم الصديقة:</label>
-                <input type="text" id="friendNameInput" placeholder="اسم الصديقة المبدعة...">
-            </div>
-            <div class="form-group">
-                <label for="friendArtTitle">اسم اللوحة:</label>
-                <input type="text" id="friendArtTitle" placeholder="عنوان الرسمة...">
-            </div>
-            <div class="form-group">
-                <label>اختر صورة الرسمة:</label>
-                <input type="file" id="friendArtImage" accept="image/*" style="display: none;">
-                <div class="file-custom-btn" id="friendFileTrigger" style="border-color: #ff7494; color: #ff7494;">📸 اضغط هنا لاختيار الصورة</div>
-                <div class="ai-loading-bar" id="friendAiLoadingBar">
-                    <span style="color: #ff7494;">✨ جاري تصفية وتهيئة الألوان...</span>
-                    <div class="ai-progress-track"><div class="ai-progress-fill" id="friendAiProgressFill" style="background: #ff7494;"></div></div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-cancel" id="closeFriendModalBtn">إلغاء</button>
-                <button class="btn btn-submit" id="saveFriendArtBtn" style="background: #ff7494;">إضافة للمجموعة</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف -->
-    <div class="modal" id="viewModal">
-        <div class="viewer-content">
             
-            <!-- أسهم التحرك يمين ويسار للكمبيوتر -->
-            <div class="nav-arrow arrow-right" id="prevImageBtn" title="الصورة السابقة">➔</div>
-            <div class="nav-arrow arrow-left" id="nextImageBtn" title="الصورة التالية">➔</div>
-
-            <!-- الشريط العلوي الذكي للمعلومات والأدوات -->
-            <div class="viewer-top-bar">
-                <div class="viewer-meta-info">
-                    <div class="viewer-friend" id="viewerFriendName">الصديقة: </div>
-                    <h2 id="viewerTitle">اسم اللوحة</h2>
-                    <p id="viewerDate">التاريخ</p>
-                </div>
-
-                <div class="viewer-actions-container">
-                    <button class="btn-menu-toggle" id="menuToggleBtn" title="عرض الأدوات للتحكم">⚙️</button>
-                    
-                    <div class="hidden-tools-menu" id="hiddenToolsMenu">
-                        <button class="action-icon-btn btn-ai-trigger" id="aiEnhanceBtn">🪄 محرك AI</button>
-                        <button class="action-icon-btn btn-reset-trigger" id="aiResetBtn">🔄 استعادة الأصل</button>
-                        <button class="action-icon-btn btn-edit-trigger" id="editArtBtn">✏️ تعديل البيانات</button>
-                        <button class="action-icon-btn btn-delete-trigger" id="deleteArtBtn">❌ حذف اللوحة</button>
-                    </div>
-
-                    <div class="close-viewer-btn" id="closeViewerBtn" title="إغلاق">✕</div>
-                </div>
-            </div>
-
-            <!-- حاوية الصورة الفنية لدعم اللمس والسحب -->
-            <div class="viewer-img-wrapper" id="viewerImgWrapper">
-                <img id="viewerImage" src="" alt="">
-            </div>
-
-        </div>
-    </div>
-
-    <!-- نافذة تعديل بيانات اللوحة زجاجية مخصصة -->
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <h2>✏️ تعديل بيانات اللوحة</h2>
-            <div class="form-group" id="editFriendNameGroup" style="display: none;">
-                <label for="editFriendName">اسم الصديقة الجديد:</label>
-                <input type="text" id="editFriendName">
-            </div>
-            <div class="form-group">
-                <label for="editArtTitle">اسم اللوحة الجديد:</label>
-                <input type="text" id="editArtTitle">
-            </div>
-            <div class="form-group">
-                <label>تغيير الصورة الحالي (اختياري):</label>
-                <input type="file" id="editArtImage" accept="image/*" style="display: none;">
-                <div class="file-custom-btn" id="editFileTrigger">📸 اضغط هنا لتغيير الصورة الحالية</div>
-                <div class="ai-loading-bar" id="editAiLoadingBar">
-                    <span>✨ جاري تحديث وتهيئة الصورة الجديدة...</span>
-                    <div class="ai-progress-track"><div class="ai-progress-fill" id="editAiProgressFill"></div></div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-cancel" id="closeEditModalBtn">إلغاء</button>
-                <button class="btn btn-submit" id="updateArtBtn">حفظ التعديلات</button>
+            <!-- اسم القطعة -->
+            <div class="col form-group">
+                <label for="itemName">اسم القطعة / الصنف:</label>
+                <input type="text" id="itemName" required placeholder="مثال: ذراع PS4 أصلي">
             </div>
         </div>
-    </div>
 
-    <script>
-        const CORRECT_PASSWORD = "291188";
-        let passwordCallback = null; 
-        let activeIndex = 0; 
+        <div class="row">
+            <!-- الكمية -->
+            <div class="col form-group">
+                <label for="quantity">الكمية:</label>
+                <input type="number" id="quantity" min="1" value="1" required>
+            </div>
 
-        let savedGalleryItems = JSON.parse(localStorage.getItem('jody_saved_gallery')) || [];
+            <!-- الحالة -->
+            <div class="col form-group">
+                <label for="status">الحالة / نوع الحركة:</label>
+                <select id="status" required>
+                    <option value="صيانة">تحت الصيانة</option>
+                    <option value="تمت الصيانة">تمت الصيانة (جاهز)</option>
+                    <option value="تالف">تالف / تكهين</option>
+                    <option value="مخزن">متاح في المخزن</option>
+                </select>
+            </div>
+        </div>
 
-        const passwordModal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
-        const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+        <!-- تفاصيل العطل أو الملاحظات -->
+        <div class="form-group">
+            <label for="notes">تفاصيل العطل / الملاحظات:</label>
+            <textarea id="notes" rows="4" placeholder="اكتب تفاصيل الصيانة أو العطل هنا..."></textarea>
+        </div>
 
-        function requirePassword(onSuccessAction) {
-            passwordInput.value = ''; 
-            passwordCallback = onSuccessAction;
-            passwordModal.classList.add('show');
-            passwordInput.focus();
-        }
+        <!-- زر الإرسال -->
+        <button type="submit" class="btn-submit">حفظ البيانات</button>
+    </form>
+</div>
 
-        cancelPasswordBtn.addEventListener('click', () => { passwordModal.classList.remove('show'); passwordCallback = null; });
-        submitPasswordBtn.addEventListener('click', verifyEnteredPassword);
-        passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyEnteredPassword(); });
-
-        function verifyEnteredPassword() {
-            if (passwordInput.value === CORRECT_PASSWORD) {
-                passwordModal.classList.remove('show');
-                if (passwordCallback) passwordCallback(); 
-            } else {
-                alert("❌ كلمة السر خاطئة! حاول مجدداً لحماية الملفات.");
-            }
-        }
-
-        const themeConfig = {
-            purple: { bg: '#fcf8ff', main: '#6c4f93', text: '#4a3e56', sub: '#7b629e', shadow: 'rgba(142, 108, 191, 0.12)', cardBg: 'rgba(255, 255, 255, 0.45)', border: 'rgba(255, 255, 255, 0.4)', headerBg: 'rgba(255, 255, 255, 0.5)', modalBg: 'rgba(255, 255, 255, 0.4)', modalText: '#4a3e56' },
-            pink: { bg: '#fffafd', main: '#d84b73', text: '#5c3a43', sub: '#b5526f', shadow: 'rgba(216, 75, 115, 0.12)', cardBg: 'rgba(255, 255, 255, 0.45)', border: 'rgba(255, 255, 255, 0.4)', headerBg: 'rgba(255, 255, 255, 0.5)', modalBg: 'rgba(255, 255, 255, 0.4)', modalText: '#5c3a43' },
-            darkNight: { bg: '#0d0b14', main: '#b592e6', text: '#f1edf7', sub: '#9980b8', shadow: 'rgba(0, 0, 0, 0.5)', cardBg: 'rgba(24, 20, 36, 0.55)', border: 'rgba(255, 255, 255, 0.08)', headerBg: 'rgba(20, 16, 31, 0.65)', modalBg: 'rgba(22, 18, 33, 0.75)', modalText: '#f1edf7' }
+<script>
+    document.getElementById('maintenanceForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // تجميع البيانات لإرسالها إلى Google Apps Script أو قاعدة البيانات
+        const formData = {
+            itemCode: document.getElementById('itemCode').value,
+            itemName: document.getElementById('itemName').value,
+            quantity: document.getElementById('quantity').value,
+            status: document.getElementById('status').value,
+            notes: document.getElementById('notes').value,
+            timestamp: new Date().toLocaleString('ar-EG')
         };
 
-        function applyTheme(themeName, svgColor) {
-            const theme = themeConfig[themeName] || themeConfig.purple;
-            const colorCode = svgColor || '%23eadef7';
-            document.documentElement.style.setProperty('--bg-color', theme.bg);
-            document.documentElement.style.setProperty('--main-color', theme.main);
-            document.documentElement.style.setProperty('--text-color', theme.text);
-            document.documentElement.style.setProperty('--sub-color', theme.sub);
-            document.documentElement.style.setProperty('--shadow-color', theme.shadow);
-            document.documentElement.style.setProperty('--card-bg', theme.cardBg);
-            document.documentElement.style.setProperty('--border-color', theme.border);
-            document.documentElement.style.setProperty('--header-bg', theme.headerBg);
-            document.documentElement.style.setProperty('--modal-bg', theme.modalBg);
-            document.documentElement.style.setProperty('--modal-text', theme.modalText);
-            
-            document.body.style.backgroundImage = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='${colorCode}' fill-opacity='0.1'%3E%3Cpath d='M40 15c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3Cpath d='M40 35c-3-1-5-4-5-7 0-4 3-7 7-7 4 0 9 5 13 14-4 9-9 14-14 14-4 0-7-3-7-7 0-3 2-6 6-7z'/%3E%3Cpath d='M20 45c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3Cpath d='M60 45c-1-3-4-5-7-5-4 0-7 3-7 7 0 4 5 9 14 13 9-4 14-9 14-13 0-4-3-7-7-7-3 0-6 2-7 5z'/%3E%3C/g%3E%3C/svg%3E")`;
-            localStorage.setItem('jody_gallery_theme', themeName);
-            localStorage.setItem('jody_gallery_svg', colorCode);
-        }
-
-        const savedTheme = localStorage.getItem('jody_gallery_theme');
-        const savedSvg = localStorage.getItem('jody_gallery_svg');
-        if (savedTheme) applyTheme(savedTheme, savedSvg); else applyTheme('purple', '%23eadef7');
-
-        const paletteBtn = document.getElementById('paletteBtn');
-        const colorsBox = document.getElementById('colorsBox');
-        paletteBtn.addEventListener('click', () => colorsBox.classList.toggle('show'));
-        document.querySelectorAll('.color-dot').forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                applyTheme(e.target.getAttribute('data-theme'), e.target.getAttribute('data-svg'));
-                colorsBox.classList.remove('show');
-            });
-        });
-
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const addModal = document.getElementById('addModal');
-        const fileTrigger = document.getElementById('fileTrigger');
-        const artImageInput = document.getElementById('artImage');
-        const saveArtBtn = document.getElementById('saveArtBtn');
-        const artTitleInput = document.getElementById('artTitle');
-        const galleryGrid = document.getElementById('galleryGrid');
-        const aiLoadingBar = document.getElementById('aiLoadingBar');
-        const aiProgressFill = document.getElementById('aiProgressFill');
-
-        const openFriendModalBtn = document.getElementById('openFriendModalBtn');
-        const closeFriendModalBtn = document.getElementById('closeFriendModalBtn');
-        const addFriendModal = document.getElementById('addFriendModal');
-        const friendFileTrigger = document.getElementById('friendFileTrigger');
-        const friendArtImageInput = document.getElementById('friendArtImage');
-        const friendNameInput = document.getElementById('friendNameInput');
-        const friendArtTitleInput = document.getElementById('friendArtTitle');
-        const saveFriendArtBtn = document.getElementById('saveFriendArtBtn');
-        const friendsGalleryGrid = document.getElementById('friendsGalleryGrid');
-        const friendAiLoadingBar = document.getElementById('friendAiLoadingBar');
-        const friendAiProgressFill = document.getElementById('friendAiProgressFill');
-
-        const viewModal = document.getElementById('viewModal');
-        const closeViewerBtn = document.getElementById('closeViewerBtn');
-        const viewerImage = document.getElementById('viewerImage');
-        const viewerTitle = document.getElementById('viewerTitle');
-        const viewerDate = document.getElementById('viewerDate');
-        const viewerFriendName = document.getElementById('viewerFriendName');
-        const viewerImgWrapper = document.getElementById('viewerImgWrapper');
+        console.log('تم تجهيز البيانات بنجاح:', formData);
         
-        const prevImageBtn = document.getElementById('prevImageBtn');
-        const nextImageBtn = document.getElementById('nextImageBtn');
+        // هنا يتم الربط مع الـ Backend الخاص بك
+        // google.script.run.withSuccessHandler(onSuccess).saveData(formData);
+        
+        alert('تم حفظ البيانات بنجاح!');
+        this.reset();
+    });
+</script>
 
-        const menuToggleBtn = document.getElementById('menuToggleBtn');
-        const hiddenToolsMenu = document.getElementById('hiddenToolsMenu');
-        const aiEnhanceBtn = document.getElementById('aiEnhanceBtn');
-        const aiResetBtn = document.getElementById('aiResetBtn');
-        const editArtBtn = document.getElementById('editArtBtn');
-        const deleteArtBtn = document.getElementById('deleteArtBtn');
-
-        const editModal = document.getElementById('editModal');
-        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
-        const editArtTitleInput = document.getElementById('editArtTitle');
-        const editFriendNameInput = document.getElementById('editFriendName');
-        const editFriendNameGroup = document.getElementById('editFriendNameGroup');
-        const editArtImageInput = document.getElementById('editArtImage');
-        const editFileTrigger = document.getElementById('editFileTrigger');
-        const updateArtBtn = document.getElementById('updateArtBtn');
-        const editAiLoadingBar = document.getElementById('editAiLoadingBar');
-        const editAiProgressFill = document.getElementById('editAiProgressFill');
-
-        let selectedImageSrc = ''; let friendImageSrc = ''; let editImageSrc = '';
-
-        menuToggleBtn.addEventListener('click', () => { menuToggleBtn.classList.toggle('active'); hiddenToolsMenu.classList.toggle('show'); });
-
-        function triggerAiProcessing(file, triggerEl, loadingBarEl, progressFillEl, callback) {
-            triggerEl.innerText = `جاري رفع وتحميل الملف الفني...`;
-            loadingBarEl.style.display = 'block';
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 5; if(progress > 100) progress = 100;
-                progressFillEl.style.width = `${progress}%`;
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    triggerEl.innerText = `✨ تم تصفية وتهيئة جودة الصورة الذكية!`;
-                    const reader = new FileReader();
-                    reader.onload = function(event) { callback(event.target.result); };
-                    reader.readAsDataURL(file);
-                }
-            }, 20);
-        }
-
-        function saveToLocalStorage() { localStorage.setItem('jody_saved_gallery', JSON.stringify(savedGalleryItems)); }
-
-        function createCardElement(item, index) {
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
-            galleryItem.dataset.id = item.id;
-            
-            const aiClass = item.aiEnhanced ? 'ai-enhanced-true' : '';
-            let badgeHtml = item.type === 'friend' ? `<div class="friend-badge-tag">🦋 صديقة</div>` : '';
-            let friendInfoHtml = item.type === 'friend' ? `<div class="friend-name">👤 الصديقة: ${item.friendName}</div>` : '';
-
-            galleryItem.innerHTML = `
-                ${badgeHtml}
-                <div class="gallery-item-img-container">
-                    <img src="${item.image}" alt="${item.title}" class="${aiClass}">
-                </div>
-                <div class="img-info">
-                    ${friendInfoHtml}
-                    <h3>${item.title}</h3>
-                    <div class="date">📅 ${item.date}</div>
-                </div>
-            `;
-
-            if(item.type === 'friend') friendsGalleryGrid.appendChild(galleryItem);
-            else galleryGrid.appendChild(galleryItem);
-
-            galleryItem.addEventListener('click', () => { openViewer(index); });
-        }
-
-        function loadGalleryFromCache() {
-            galleryGrid.innerHTML = ''; friendsGalleryGrid.innerHTML = '';
-            savedGalleryItems.forEach((item, index) => { createCardElement(item, index); });
-        }
-        loadGalleryFromCache();
-
-        openModalBtn.addEventListener('click', () => { requirePassword(() => { addModal.classList.add('show'); }); });
-        closeModalBtn.addEventListener('click', () => { addModal.classList.remove('show'); });
-        fileTrigger.addEventListener('click', () => artImageInput.click());
-        artImageInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) triggerAiProcessing(e.target.files[0], fileTrigger, aiLoadingBar, aiProgressFill, (src) => { selectedImageSrc = src; });
-        });
-
-        saveArtBtn.addEventListener('click', () => {
-            const title = artTitleInput.value.trim();
-            if (!title || !selectedImageSrc) { alert('من فضلكِ أكملي البيانات الفنية أولاً يا جودي 🌸'); return; }
-            const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-            savedGalleryItems.unshift({ id: Date.now().toString(), type: 'personal', title: title, image: selectedImageSrc, date: today, aiEnhanced: false });
-            saveToLocalStorage(); loadGalleryFromCache(); addModal.classList.remove('show');
-            artTitleInput.value = ''; selectedImageSrc = ''; fileTrigger.innerText = '📸 اضغط هنا لاختيار صورة';
-        });
-
-        openFriendModalBtn.addEventListener('click', () => { requirePassword(() => { addFriendModal.classList.add('show'); }); });
-        closeFriendModalBtn.addEventListener('click', () => { addFriendModal.classList.remove('show'); });
-        friendFileTrigger.addEventListener('click', () => friendArtImageInput.click());
-        friendArtImageInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) triggerAiProcessing(e.target.files[0], friendFileTrigger, friendAiLoadingBar, friendAiProgressFill, (src) => { friendImageSrc = src; });
-        });
-
-        saveFriendArtBtn.addEventListener('click', () => {
-            const name = friendNameInput.value.trim(); const title = friendArtTitleInput.value.trim();
-            if (!name || !title || !friendImageSrc) { alert('من فضلكِ املئي الحقول المطلوبة! ✨'); return; }
-            const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-            savedGalleryItems.unshift({ id: Date.now().toString(), type: 'friend', friendName: name, title: title, image: friendImageSrc, date: today, aiEnhanced: false });
-            saveToLocalStorage(); loadGalleryFromCache(); addFriendModal.classList.remove('show');
-            friendNameInput.value = ''; friendArtTitleInput.value = ''; friendImageSrc = ''; friendFileTrigger.innerText = '📸 اضغط هنا لاختيار الصورة';
-        });
-
-        function updateViewerContent() {
-            const item = savedGalleryItems[activeIndex];
-            if (!item) return;
-
-            viewerImage.src = item.image;
-            viewerTitle.innerText = item.title;
-            viewerDate.innerText = `📅 ${item.date}`;
-
-            if (item.aiEnhanced) viewerImage.classList.add('ai-enhanced-true');
-            else viewerImage.classList.remove('ai-enhanced-true');
-
-            if (item.type === 'friend') {
-                viewerFriendName.innerText = `👤 الصديقة: ${item.friendName}`;
-                viewerFriendName.style.display = 'block';
-            } else {
-                viewerFriendName.style.display = 'none';
-            }
-        }
-
-        function openViewer(index) {
-            activeIndex = index;
-            updateViewerContent();
-            hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-            viewModal.classList.add('show');
-        }
-
-        closeViewerBtn.addEventListener('click', () => viewModal.classList.remove('show'));
-
-        function navigateNext() {
-            if (savedGalleryItems.length <= 1) return;
-            activeIndex = (activeIndex + 1) % savedGalleryItems.length;
-            updateViewerContent();
-        }
-
-        function navigatePrev() {
-            if (savedGalleryItems.length <= 1) return;
-            activeIndex = (activeIndex - 1 + savedGalleryItems.length) % savedGalleryItems.length;
-            updateViewerContent();
-        }
-
-        nextImageBtn.addEventListener('click', (e) => { e.stopPropagation(); navigateNext(); });
-        prevImageBtn.addEventListener('click', (e) => { e.stopPropagation(); navigatePrev(); });
-
-        document.addEventListener('keydown', (e) => {
-            if (!viewModal.classList.contains('show')) return;
-            if (e.key === 'ArrowLeft') navigateNext(); 
-            if (e.key === 'ArrowRight') navigatePrev();
-        });
-
-        let touchStartX = 0; let touchEndX = 0;
-        viewerImgWrapper.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        viewerImgWrapper.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipeGesture();
-        }, {passive: true});
-
-        function handleSwipeGesture() {
-            const swipeThreshold = 50; 
-            if (touchStartX - touchEndX > swipeThreshold) {
-                navigateNext();
-            } else if (touchEndX - touchStartX > swipeThreshold) {
-                navigatePrev();
-            }
-        }
-
-        aiEnhanceBtn.addEventListener('click', () => {
-            requirePassword(() => {
-                savedGalleryItems[activeIndex].aiEnhanced = true; saveToLocalStorage();
-                updateViewerContent(); loadGalleryFromCache();
-                hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-                alert("🪄 تم معالجة الصورة الكاملة بمحرك الـ AI فلاتر الذكاء الفوري!");
-            });
-        });
-
-        aiResetBtn.addEventListener('click', () => {
-            savedGalleryItems[activeIndex].aiEnhanced = false; saveToLocalStorage();
-            updateViewerContent(); loadGalleryFromCache();
-            hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-            alert("🔄 تم إلغاء تأثير الـ AI بنجاح.");
-        });
-
-        deleteArtBtn.addEventListener('click', () => {
-            requirePassword(() => {
-                if (confirm(`هل ترغبين بالتأكيد في حذف هذه اللوحة الفنية بشكل نهائي؟`)) {
-                    savedGalleryItems.splice(activeIndex, 1); saveToLocalStorage(); loadGalleryFromCache();
-                    if (savedGalleryItems.length === 0) { viewModal.classList.remove('show'); } 
-                    else { navigateNext(); }
-                    hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-                }
-            });
-        });
-
-        editArtBtn.addEventListener('click', () => {
-            requirePassword(() => {
-                const itemData = savedGalleryItems[activeIndex];
-                editArtTitleInput.value = itemData.title; editImageSrc = itemData.image;
-                editFileTrigger.innerText = '📸 اضغط هنا لتغيير الصورة الحالية'; editArtImageInput.value = '';
-                
-                if (itemData.type === 'friend') {
-                    editFriendNameGroup.style.display = 'block'; editFriendNameInput.value = itemData.friendName;
-                } else {
-                    editFriendNameGroup.style.display = 'none';
-                }
-                hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-                editModal.classList.add('show');
-            });
-        });
-
-        closeEditModalBtn.addEventListener('click', () => editModal.classList.remove('show'));
-        editFileTrigger.addEventListener('click', () => editArtImageInput.click());
-        editArtImageInput.addEventListener('change', (e) => {
-            if (e.target.files[0]) triggerAiProcessing(e.target.files[0], editFileTrigger, editAiLoadingBar, editAiProgressFill, (src) => { editImageSrc = src; });
-        });
-
-        updateArtBtn.addEventListener('click', () => {
-            const title = editArtTitleInput.value.trim(); if (!title) return;
-            savedGalleryItems[activeIndex].title = title;
-            savedGalleryItems[activeIndex].image = editImageSrc;
-            if (savedGalleryItems[activeIndex].type === 'friend') {
-                savedGalleryItems[activeIndex].friendName = editFriendNameInput.value.trim();
-            }
-            saveToLocalStorage(); loadGalleryFromCache(); updateViewerContent();
-            editModal.classList.remove('show');
-        });
-
-        window.addEventListener('click', (e) => {
-            if (!paletteBtn.contains(e.target) && !colorsBox.contains(e.target)) colorsBox.classList.remove('show');
-        });
-    </script>
 </body>
 </html>
