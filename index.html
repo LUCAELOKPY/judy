@@ -656,7 +656,7 @@
             });
         });
 
-        // دالة تحويل ومعالجة الصورة محلياً لتعمل بمسار نسبي بجوار صفحة index
+        // دالة معالجة الصورة للحفظ الفوري والمعاينة السريعة والتحضير لمجلد الـ GitHub
         function processLocalImage(file, statusTextEl, progressFillEl, callback) {
             statusTextEl.innerText = "⏳ جاري إعداد وتجهيز الصورة...";
             progressFillEl.style.width = "50%";
@@ -745,7 +745,7 @@
             let badgeHtml = item.type === 'friend' ? `<div class="friend-badge-tag">🦋 صديقة</div>` : '';
             let friendInfoHtml = item.type === 'friend' ? `<div class="friend-name">👤 الصديقة: ${item.friendName}</div>` : '';
 
-            // العرض يدعم مسار الصورة المرفوع بجانب الفولدر، وفي حال عدم وجوده كاش باك يعتمد على الـ Base64
+            // الفول باك يعتمد على الـ Base64 لو الصورة لسة متوضعتش في الفولدر
             const finalDisplaySrc = item.relativePath || item.image;
 
             galleryItem.innerHTML = `
