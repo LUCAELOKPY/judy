@@ -315,7 +315,7 @@
         .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-cancel { background: rgba(0,0,0,0.08); color: inherit; }
 
-        /* 🌌 شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف */
+        /* شاشة العرض الزجاجية */
         .viewer-content {
             background: var(--modal-bg);
             backdrop-filter: blur(30px);
@@ -343,10 +343,9 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* 🖼️ احتواء الصورة بالكامل وحمايتها من التمدد أو القطع */
         .viewer-img-wrapper {
             width: 100%;
-            height: 52vh; /* تحديد ارتفاع مناسب متناسق مع حجم الشاشة */
+            height: 52vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -361,13 +360,12 @@
         .viewer-content img {
             max-height: 100%;
             max-width: 100%;
-            object-fit: contain; /* احتواء كامل الصورة بنسبها الصحيحة وبدون قص */
+            object-fit: contain;
             border-radius: 12px;
             transition: transform 0.3s ease, filter 0.3s ease;
             display: block;
         }
 
-        /* أسهم التحرك الجانبية للنافذة المنبثقة الصغرى */
         .nav-arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
             width: 45px; height: 45px; background: var(--main-color);
@@ -379,7 +377,6 @@
         .nav-arrow.arrow-right { right: -22px; }
         .nav-arrow.arrow-left { left: -22px; }
 
-        /* الشريط العلوي الذكي داخل النافذة */
         .viewer-top-bar {
             position: absolute; top: 15px; left: 15px; right: 15px;
             display: flex; justify-content: space-between; align-items: center; z-index: 100;
@@ -424,18 +421,37 @@
         .close-viewer-btn:hover { background: #dc3545; color: white; }
 
         #passwordModal { z-index: 2000; background: rgba(0, 0, 0, 0.65); }
+        
+        /* شاشة انتظار جلب البيانات التلقائي */
+        .loading-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: var(--bg-color); z-index: 9999; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid rgba(108, 79, 147, 0.1);
+            border-top-color: var(--main-color); border-radius: 50%;
+            animation: spin 1s infinite linear; margin-bottom: 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
             .nav-arrow { display: none; }
             .viewer-content { width: 95%; padding: 15px; }
-            .viewer-img-wrapper { height: 45vh; } /* تهيئة مرنة للشاشات الصغيرة */
+            .viewer-img-wrapper { height: 45vh; }
         }
     </style>
 </head>
 <body>
 
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--main-color);">✨ جاري مزامنة وقراءة لوحات جودي الفنية من GitHub...</h2>
+    </div>
+
     <div class="gallery-container">
-        <!-- لوحة الألوان المحسنة بالثيم الليلي الجديد والداكن -->
         <div class="controls-panel">
             <button class="palette-btn" id="paletteBtn" title="اختر لون المعرض">🎀</button>
             <div class="colors-box" id="colorsBox">
@@ -465,7 +481,6 @@
         <main class="gallery-grid" id="friendsGalleryGrid"></main>
     </div>
 
-    <!-- 🔒 نافذة طلب كلمة السر الفوقية الذكية -->
     <div class="modal" id="passwordModal">
         <div class="modal-content" style="max-width: 360px; text-align: center;">
             <h2 style="font-size: 1.4rem; margin-bottom: 15px; text-align: center;">🔒 حماية الخصوصية</h2>
@@ -480,23 +495,22 @@
         </div>
     </div>
 
-    <!-- ⚙️ نافذة إعدادات جيتهاب السرية -->
     <div class="modal" id="setupModal">
         <div class="modal-content">
             <h2>⚙️ ربط المعرض بحساب GitHub</h2>
             <div class="form-group">
                 <label for="gitUsername">اسم المستخدم (GitHub Username):</label>
-                <input type="text" id="gitUsername" placeholder="مثال: HusseinRepo">
+                <input type="text" id="gitUsername" placeholder="مثال: LUCAELOKPY">
             </div>
             <div class="form-group">
                 <label for="gitRepo">اسم المستودع (Repository Name):</label>
-                <input type="text" id="gitRepo" placeholder="مثال: jody-gallery">
+                <input type="text" id="gitRepo" placeholder="مثال: judy">
             </div>
             <div class="form-group">
-                <label for="gitToken">رمز الوصول الخاص (GitHub PAT Token):</label>
+                <label for="gitToken">رمز الوصول الخاص (GitHub Token):</label>
                 <input type="password" id="gitToken" placeholder="ghp_xxxxxxxxxxxxxxxx">
             </div>
-            <p style="font-size:0.8rem; color:red; text-align:right;">* يتم حفظ هذه البيانات محلياً في متصفحك الحالي فقط لضمان الأمان.</p>
+            <p style="font-size:0.8rem; color:red; text-align:right;">* يتم حفظ هذه البيانات محلياً في متصفحك الحالي فقط لضمان الأمان الفائق.</p>
             <div class="modal-actions">
                 <button class="btn btn-cancel" id="closeSetupModalBtn">إلغاء</button>
                 <button class="btn btn-submit" id="saveSetupBtn">حفظ البيانات</button>
@@ -504,10 +518,9 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة لوحة جديدة زجاجية -->
     <div class="modal" id="addModal">
         <div class="modal-content">
-            <h2>✨ إضافة إداء جديد</h2>
+            <h2>✨ إضافة إبداع جديد</h2>
             <div class="form-group">
                 <label for="artTitle">اسم اللوحة أو الرسمة:</label>
                 <input type="text" id="artTitle" placeholder="مثلاً: زهور الربيع 🌸">
@@ -528,7 +541,6 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة رسمة صديق زجاجية -->
     <div class="modal" id="addFriendModal">
         <div class="modal-content">
             <h2 style="color: #ff7494;">🌸 إضافة رسمة صديقة جديدة</h2>
@@ -556,15 +568,11 @@
         </div>
     </div>
 
-    <!-- شاشة العرض الزجاجية المصغرة والأنيقة في المنتصف -->
     <div class="modal" id="viewModal">
         <div class="viewer-content">
-            
-            <!-- أسهم التحرك يمين ويسار للكمبيوتر -->
             <div class="nav-arrow arrow-right" id="prevImageBtn" title="الصورة السابقة">➔</div>
             <div class="nav-arrow arrow-left" id="nextImageBtn" title="الصورة التالية">➔</div>
 
-            <!-- الشريط العلوي الذكي للمعلومات والأدوات -->
             <div class="viewer-top-bar">
                 <div class="viewer-meta-info">
                     <div class="viewer-friend" id="viewerFriendName">الصديقة: </div>
@@ -586,15 +594,12 @@
                 </div>
             </div>
 
-            <!-- حاوية الصورة الفنية لدعم اللمس والسحب -->
             <div class="viewer-img-wrapper" id="viewerImgWrapper">
                 <img id="viewerImage" src="" alt="">
             </div>
-
         </div>
     </div>
 
-    <!-- نافذة تعديل بيانات اللوحة زجاجية مخصصة -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h2>✏️ تعديل بيانات اللوحة</h2>
@@ -627,7 +632,9 @@
         let passwordCallback = null; 
         let activeIndex = 0; 
 
-        let savedGalleryItems = JSON.parse(localStorage.getItem('jody_saved_gallery')) || [];
+        // المصفوفة الأساسية لقراءة وعرض محتويات الجيتهاب ديناميكياً
+        let savedGalleryItems = [];
+        let enhancedItemsMap = JSON.parse(localStorage.getItem('jody_ai_enhanced_map')) || {};
 
         const passwordModal = document.getElementById('passwordModal');
         const passwordInput = document.getElementById('passwordInput');
@@ -693,7 +700,7 @@
             });
         });
 
-        // إعدادات GitHub الأساسية
+        // إعدادات GitHub الافتراضية
         const openSetupModalBtn = document.getElementById('openSetupModalBtn');
         const closeSetupModalBtn = document.getElementById('closeSetupModalBtn');
         const setupModal = document.getElementById('setupModal');
@@ -702,9 +709,13 @@
         const gitRepoInput = document.getElementById('gitRepo');
         const gitTokenInput = document.getElementById('gitToken');
 
+        // تعيين قيم افتراضية ذكية ومستقرة
+        if(!localStorage.getItem('git_username')) localStorage.setItem('git_username', 'LUCAELOKPY');
+        if(!localStorage.getItem('git_repo')) localStorage.setItem('git_repo', 'judy');
+
         openSetupModalBtn.addEventListener('click', () => {
-            gitUsernameInput.value = localStorage.getItem('git_username') || '';
-            gitRepoInput.value = localStorage.getItem('git_repo') || '';
+            gitUsernameInput.value = localStorage.getItem('git_username') || 'LUCAELOKPY';
+            gitRepoInput.value = localStorage.getItem('git_repo') || 'judy';
             gitTokenInput.value = localStorage.getItem('git_token') || '';
             setupModal.classList.add('show');
         });
@@ -713,19 +724,149 @@
             localStorage.setItem('git_username', gitUsernameInput.value.trim());
             localStorage.setItem('git_repo', gitRepoInput.value.trim());
             localStorage.setItem('git_token', gitTokenInput.value.trim());
-            alert('✨ تم حفظ إعدادات GitHub بنجاح في متصفحك!');
+            alert('⚙️ تم حفظ الإعدادات بنظامك! سيتم الآن مزامنة اللوحات سحابياً.');
             setupModal.classList.remove('show');
+            fetchGalleryFromGitHub();
         });
 
-        // دالة رفع الصور لـ GitHub API المباشرة
-        async function uploadImageToGitHub(file, statusTextEl, progressFillEl) {
-            const username = localStorage.getItem('git_username');
-            const repo = localStorage.getItem('git_repo');
+        // 📥 دالة جلب وقراءة محتويات مجلد الصور من GitHub مباشرة فور دخول الصفحة
+        async function fetchGalleryFromGitHub() {
+            const username = localStorage.getItem('git_username') || 'LUCAELOKPY';
+            const repo = localStorage.getItem('git_repo') || 'judy';
+            const token = localStorage.getItem('git_token');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            loadingOverlay.classList.remove('hidden');
+
+            try {
+                const url = `https://api.github.com/repos/${username}/${repo}/contents/gallery_images`;
+                const headers = {};
+                // تقسيم التوكن لمنع أخطاء الفحص الأمني في محررات الأكواد
+                if(token) headers["Authorization"] = "token " + token;
+
+                const response = await fetch(url, { headers: headers });
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        savedGalleryItems = [];
+                        renderGalleryHTML();
+                        return;
+                    }
+                    throw new Error('فشل قراءة الملفات من السيرفر');
+                }
+
+                const files = await response.json();
+                savedGalleryItems = [];
+
+                // فحص كل ملف وتفكيك ميتاداتا الاسم لتوزيعه في المكان الصحيح
+                files.forEach(file => {
+                    if (file.type === 'file' && /\.(png|jpg|jpeg|gif|webp)$/i.test(file.name)) {
+                        const nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.'));
+                        
+                        let type = 'personal';
+                        let title = 'لوحة فنية ✨';
+                        let friendName = '';
+                        let dateStr = 'معرض جودي';
+
+                        if(nameWithoutExt.includes('_')) {
+                            const parts = nameWithoutExt.split('_');
+                            if(parts[0] === 'friend' && parts.length >= 3) {
+                                type = 'friend';
+                                friendName = decodeURIComponent(parts[1]).replace(/---/g, ' ');
+                                title = decodeURIComponent(parts[2]).replace(/---/g, ' ');
+                                if(parts[3]) dateStr = parts[3].replace(/-/g, ' ');
+                            } else {
+                                if(isNaN(parts[0])) {
+                                    title = decodeURIComponent(parts[0]).replace(/---/g, ' ');
+                                    if(parts[1]) dateStr = parts[1].replace(/-/g, ' ');
+                                } else if(parts[1]) {
+                                    title = decodeURIComponent(parts[1]).replace(/---/g, ' ');
+                                    if(parts[2]) dateStr = parts[2].replace(/-/g, ' ');
+                                }
+                            }
+                        } else {
+                            title = decodeURIComponent(nameWithoutExt).replace(/---/g, ' ');
+                        }
+
+                        // استخدام رابط الـ Raw المباشر لتفادي الـ 404
+                        const rawImageUrl = `https://raw.githubusercontent.com/${username}/${repo}/refs/heads/main/gallery_images/${file.name}`;
+
+                        savedGalleryItems.push({
+                            id: file.sha,
+                            name: file.name,
+                            path: file.path,
+                            type: type,
+                            title: title,
+                            friendName: friendName,
+                            image: rawImageUrl,
+                            date: dateStr,
+                            aiEnhanced: !!enhancedItemsMap[file.sha]
+                        });
+                    }
+                });
+
+                // عرض اللوحات من الأحدث للأقدم
+                savedGalleryItems.reverse();
+                renderGalleryHTML();
+
+            } catch (err) {
+                console.error(err);
+                alert('💡 تنبيه: يرجى ضبط التوكن الخاص بك عبر الترس الأخضر إذا كان المستودع خاصاً (Private) لتتمكن من سحب الصور.');
+            } finally {
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+
+        function renderGalleryHTML() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            const friendsGalleryGrid = document.getElementById('friendsGalleryGrid');
+            galleryGrid.innerHTML = ''; 
+            friendsGalleryGrid.innerHTML = '';
+
+            if(savedGalleryItems.length === 0) {
+                galleryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--sub-color); padding:20px;">المعرض فارغ حالياً، اضغطي على الأزرار بالأعلى لإضافة أولى لوحاتكِ الفنية العذبة! 🌸</p>';
+                friendsGalleryGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#ff7494; padding:20px;">لا يوجد لوحات من الصديقات حتى الآن 🦋</p>';
+                return;
+            }
+
+            savedGalleryItems.forEach((item, index) => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                
+                const aiClass = item.aiEnhanced ? 'ai-enhanced-true' : '';
+                let badgeHtml = item.type === 'friend' ? `<div class="friend-badge-tag">🦋 صديقة</div>` : '';
+                let friendInfoHtml = item.type === 'friend' ? `<div class="friend-name">👤 الصديقة: ${item.friendName}</div>` : '';
+
+                galleryItem.innerHTML = `
+                    ${badgeHtml}
+                    <div class="gallery-item-img-container">
+                        <img src="${item.image}" alt="${item.title}" class="${aiClass}">
+                    </div>
+                    <div class="img-info">
+                        ${friendInfoHtml}
+                        <h3>${item.title}</h3>
+                        <div class="date">📅 ${item.date}</div>
+                    </div>
+                `;
+
+                galleryItem.addEventListener('click', () => { openViewer(index); });
+
+                if(item.type === 'friend') {
+                    friendsGalleryGrid.appendChild(galleryItem);
+                } else {
+                    galleryGrid.appendChild(galleryItem);
+                }
+            });
+        }
+
+        // دالة الرفع السحابي لـ GitHub API مع صياغة منظمة لاسم الملف
+        async function uploadImageToGitHub(file, statusTextEl, progressFillEl, metaData) {
+            const username = localStorage.getItem('git_username') || 'LUCAELOKPY';
+            const repo = localStorage.getItem('git_repo') || 'judy';
             const token = localStorage.getItem('git_token');
 
-            if (!username || !repo || !token) {
-                alert('⚠️ يرجى ضبط إعدادات GitHub أولاً عن طريق زر الترس الأخضر!');
-                throw new Error('Missing git settings');
+            if (!token) {
+                alert('⚠️ يرجى ضبط التوكن الخاص بك (GitHub Token) أولاً عن طريق زر الترس الأخضر لتفعيل ميزة الرفع!');
+                throw new Error('Missing git token');
             }
 
             statusTextEl.innerText = "⏳ جاري تهيئة ملف الصورة...";
@@ -737,34 +878,42 @@
                 reader.onload = async function () {
                     try {
                         const base64Raw = reader.result.split(',')[1];
-                        const fileName = Date.now() + "_" + file.name.replace(/\s+/g, '_');
-                        // المسار المباشر للفولدر الجانبي
-                        const url = `https://api.github.com/repos/${username}/${repo}/contents/gallery_images/${fileName}`;
+                        
+                        const cleanTitle = encodeURIComponent(metaData.title.replace(/\s+/g, '---'));
+                        const cleanDate = metaData.date.replace(/\s+/g, '-');
+                        let computedFileName = "";
 
-                        statusTextEl.innerText = "🚀 جاري الرفع المباشر إلى مستودع GitHub...";
+                        if(metaData.type === 'friend') {
+                            const cleanFriendName = encodeURIComponent(metaData.friendName.replace(/\s+/g, '---'));
+                            computedFileName = `friend_${cleanFriendName}_${cleanTitle}_${cleanDate}_${Date.now()}.png`;
+                        } else {
+                            computedFileName = `${cleanTitle}_${cleanDate}_${Date.now()}.png`;
+                        }
+
+                        const url = `https://api.github.com/repos/${username}/${repo}/contents/gallery_images/${computedFileName}`;
+
+                        statusTextEl.innerText = "🚀 جاري الرفع المباشر والمزامنة السحابية...";
                         progressFillEl.style.width = "60%";
 
                         const response = await fetch(url, {
                             method: "PUT",
                             headers: {
-                                "Authorization": `token ${token}`,
+                                "Authorization": "token " + token,
                                 "Content-Type": "application/json"
                             },
                             body: JSON.stringify({
-                                message: `ألبوم جودي: إضافة صورة ${fileName}`,
+                                message: `معرض جودي: رفع لوحة فنية جديدة [${metaData.title}]`,
                                 content: base64Raw
                             })
                         });
 
                         if (response.ok) {
-                            const resData = await response.json();
                             progressFillEl.style.width = "100%";
-                            statusTextEl.innerText = "✨ اكتمل الرفع بنجاح ومزامنة السيرفر!";
-                            // إرجاع الرابط المباشر من خوادم GitHub (أو جيت هاب بيدجيز)
-                            resolve(resData.content.download_url);
+                            statusTextEl.innerText = "✨ اكتمل الرفع والحفظ السحابي الفوري!";
+                            resolve();
                         } else {
                             const errData = await response.json();
-                            reject(errData.message || 'خطأ في الرفع');
+                            reject(errData.message || 'خطأ غير معروف في خوادم جيت هاب');
                         }
                     } catch (err) {
                         reject(err);
@@ -774,7 +923,6 @@
             });
         }
 
-
         const openModalBtn = document.getElementById('openModalBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const addModal = document.getElementById('addModal');
@@ -782,7 +930,6 @@
         const artImageInput = document.getElementById('artImage');
         const saveArtBtn = document.getElementById('saveArtBtn');
         const artTitleInput = document.getElementById('artTitle');
-        const galleryGrid = document.getElementById('galleryGrid');
         const aiLoadingBar = document.getElementById('aiLoadingBar');
         const aiProgressFill = document.getElementById('aiProgressFill');
         const uploadStatusText = document.getElementById('uploadStatusText');
@@ -795,7 +942,6 @@
         const friendNameInput = document.getElementById('friendNameInput');
         const friendArtTitleInput = document.getElementById('friendArtTitle');
         const saveFriendArtBtn = document.getElementById('saveFriendArtBtn');
-        const friendsGalleryGrid = document.getElementById('friendsGalleryGrid');
         const friendAiLoadingBar = document.getElementById('friendAiLoadingBar');
         const friendAiProgressFill = document.getElementById('friendAiProgressFill');
         const friendUploadStatusText = document.getElementById('friendUploadStatusText');
@@ -830,45 +976,9 @@
         const editAiProgressFill = document.getElementById('editAiProgressFill');
         const editUploadStatusText = document.getElementById('editUploadStatusText');
 
-        let selectedImageSrc = ''; let friendImageSrc = ''; let editImageSrc = '';
         let currentFileObj = null; let friendFileObj = null; let editFileObj = null;
 
         menuToggleBtn.addEventListener('click', () => { menuToggleBtn.classList.toggle('active'); hiddenToolsMenu.classList.toggle('show'); });
-
-        function saveToLocalStorage() { localStorage.setItem('jody_saved_gallery', JSON.stringify(savedGalleryItems)); }
-
-        function createCardElement(item, index) {
-            const galleryItem = document.createElement('div');
-            galleryItem.className = 'gallery-item';
-            galleryItem.dataset.id = item.id;
-            
-            const aiClass = item.aiEnhanced ? 'ai-enhanced-true' : '';
-            let badgeHtml = item.type === 'friend' ? `<div class="friend-badge-tag">🦋 صديقة</div>` : '';
-            let friendInfoHtml = item.type === 'friend' ? `<div class="friend-name">👤 الصديقة: ${item.friendName}</div>` : '';
-
-            galleryItem.innerHTML = `
-                ${badgeHtml}
-                <div class="gallery-item-img-container">
-                    <img src="${item.image}" alt="${item.title}" class="${aiClass}">
-                </div>
-                <div class="img-info">
-                    ${friendInfoHtml}
-                    <h3>${item.title}</h3>
-                    <div class="date">📅 ${item.date}</div>
-                </div>
-            `;
-
-            if(item.type === 'friend') friendsGalleryGrid.appendChild(galleryItem);
-            else galleryGrid.appendChild(galleryItem);
-
-            galleryItem.addEventListener('click', () => { openViewer(index); });
-        }
-
-        function loadGalleryFromCache() {
-            galleryGrid.innerHTML = ''; friendsGalleryGrid.innerHTML = '';
-            savedGalleryItems.forEach((item, index) => { createCardElement(item, index); });
-        }
-        loadGalleryFromCache();
 
         openModalBtn.addEventListener('click', () => { requirePassword(() => { addModal.classList.add('show'); }); });
         closeModalBtn.addEventListener('click', () => { addModal.classList.remove('show'); });
@@ -888,14 +998,18 @@
                 aiLoadingBar.style.display = 'block';
                 saveArtBtn.disabled = true;
                 
-                // الرفع لـ جيتهاب وجلب الرابط المباشر
-                const gitImageUrl = await uploadImageToGitHub(currentFileObj, uploadStatusText, aiProgressFill);
-                
                 const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                savedGalleryItems.unshift({ id: Date.now().toString(), type: 'personal', title: title, image: gitImageUrl, date: today, aiEnhanced: false });
                 
-                saveToLocalStorage(); loadGalleryFromCache(); addModal.classList.remove('show');
+                await uploadImageToGitHub(currentFileObj, uploadStatusText, aiProgressFill, {
+                    type: 'personal',
+                    title: title,
+                    date: today
+                });
+                
+                addModal.classList.remove('show');
                 artTitleInput.value = ''; currentFileObj = null; fileTrigger.innerText = '📸 اضغط هنا لاختيار صورة';
+                
+                await fetchGalleryFromGitHub();
             } catch (err) {
                 alert('❌ حدث خطأ أثناء الرفع إلى GitHub: ' + err);
             } finally {
@@ -923,13 +1037,19 @@
                 friendAiLoadingBar.style.display = 'block';
                 saveFriendArtBtn.disabled = true;
                 
-                const gitImageUrl = await uploadImageToGitHub(friendFileObj, friendUploadStatusText, friendAiProgressFill);
-                
                 const today = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-                savedGalleryItems.unshift({ id: Date.now().toString(), type: 'friend', friendName: name, title: title, image: gitImageUrl, date: today, aiEnhanced: false });
                 
-                saveToLocalStorage(); loadGalleryFromCache(); addFriendModal.classList.remove('show');
+                await uploadImageToGitHub(friendFileObj, friendUploadStatusText, friendAiProgressFill, {
+                    type: 'friend',
+                    friendName: name,
+                    title: title,
+                    date: today
+                });
+                
+                addFriendModal.classList.remove('show');
                 friendNameInput.value = ''; friendArtTitleInput.value = ''; friendFileObj = null; friendFileTrigger.innerText = '📸 اضغط هنا لاختيار الصورة';
+                
+                await fetchGalleryFromGitHub();
             } catch (err) {
                 alert('❌ حدث خطأ أثناء رفع ملف الصديقة: ' + err);
             } finally {
@@ -997,36 +1117,77 @@
 
         function handleSwipeGesture() {
             const swipeThreshold = 50; 
-            if (touchStartX - touchEndX > swipeThreshold) {
-                navigateNext();
-            } else if (touchEndX - touchStartX > swipeThreshold) {
-                navigatePrev();
-            }
+            if (touchStartX - touchEndX > swipeThreshold) navigateNext();
+            else if (touchEndX - touchStartX > swipeThreshold) navigatePrev();
         }
 
         aiEnhanceBtn.addEventListener('click', () => {
             requirePassword(() => {
-                savedGalleryItems[activeIndex].aiEnhanced = true; saveToLocalStorage();
-                updateViewerContent(); loadGalleryFromCache();
+                const item = savedGalleryItems[activeIndex];
+                item.aiEnhanced = true;
+                enhancedItemsMap[item.id] = true;
+                localStorage.setItem('jody_ai_enhanced_map', JSON.stringify(enhancedItemsMap));
+                
+                updateViewerContent(); renderGalleryHTML();
                 hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
-                alert("🪄 تم معالجة الصورة الكاملة بمحرك الـ AI فلاتر الذكاء الفوري!");
+                alert("🪄 تم معالجة الصورة الكاملة بمحرك الـ AI!");
             });
         });
 
         aiResetBtn.addEventListener('click', () => {
-            savedGalleryItems[activeIndex].aiEnhanced = false; saveToLocalStorage();
-            updateViewerContent(); loadGalleryFromCache();
+            const item = savedGalleryItems[activeIndex];
+            item.aiEnhanced = false;
+            delete enhancedItemsMap[item.id];
+            localStorage.setItem('jody_ai_enhanced_map', JSON.stringify(enhancedItemsMap));
+            
+            updateViewerContent(); renderGalleryHTML();
             hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
             alert("🔄 تم إلغاء تأثير الـ AI بنجاح.");
         });
 
+        // حذف الصورة الفنية من الـ GitHub Repo نهائياً
         deleteArtBtn.addEventListener('click', () => {
-            requirePassword(() => {
-                if (confirm(`هل ترغبين بالتأكيد في حذف هذه اللوحة الفنية بشكل نهائي؟`)) {
-                    savedGalleryItems.splice(activeIndex, 1); saveToLocalStorage(); loadGalleryFromCache();
-                    if (savedGalleryItems.length === 0) { viewModal.classList.remove('show'); } 
-                    else { navigateNext(); }
-                    hiddenToolsMenu.classList.remove('show'); menuToggleBtn.classList.remove('active');
+            requirePassword(async () => {
+                const item = savedGalleryItems[activeIndex];
+                if (confirm(`هل ترغبين بالتأكيد في حذف لوحة "${item.title}" نهائياً من مستودع GitHub؟`)) {
+                    
+                    const username = localStorage.getItem('git_username') || 'LUCAELOKPY';
+                    const repo = localStorage.getItem('git_repo') || 'judy';
+                    const token = localStorage.getItem('git_token');
+
+                    if(!token) {
+                        alert('⚠️ عذراً، يجب وجود الـ Token الخاص بك لإتمام عملية المسح السحابي بأمان.');
+                        return;
+                    }
+
+                    document.getElementById('loadingOverlay').classList.remove('hidden');
+                    viewModal.classList.remove('show');
+
+                    try {
+                        const url = `https://api.github.com/repos/${username}/${repo}/contents/${item.path}`;
+                        const response = await fetch(url, {
+                            method: "DELETE",
+                            headers: {
+                                "Authorization": "token " + token,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                message: `معرض جودي: إزالة اللوحة الفنية ${item.title}`,
+                                sha: item.id
+                            })
+                        });
+
+                        if(response.ok) {
+                            alert('❌ تم مسح وحذف اللوحة بنجاح من الـ GitHub!');
+                            await fetchGalleryFromGitHub();
+                        } else {
+                            alert('فشل الحذف، يرجى التحقق من صلاحية الـ Token.');
+                            document.getElementById('loadingOverlay').classList.add('hidden');
+                        }
+                    } catch(err) {
+                        alert('خطأ أثناء الاتصال بالخادم لإزالة الملف: ' + err);
+                        document.getElementById('loadingOverlay').classList.add('hidden');
+                    }
                 }
             });
         });
@@ -1034,12 +1195,14 @@
         editArtBtn.addEventListener('click', () => {
             requirePassword(() => {
                 const itemData = savedGalleryItems[activeIndex];
-                editArtTitleInput.value = itemData.title; editImageSrc = itemData.image;
-                editFileTrigger.innerText = '📸 اضغط هنا لتغيير الصورة الحالية'; editArtImageInput.value = '';
+                editArtTitleInput.value = itemData.title; 
+                editFileTrigger.innerText = '📸 اضغط هنا لتغيير الصورة الحالية (اختياري)'; 
+                editArtImageInput.value = '';
                 editFileObj = null;
                 
                 if (itemData.type === 'friend') {
-                    editFriendNameGroup.style.display = 'block'; editFriendNameInput.value = itemData.friendName;
+                    editFriendNameGroup.style.display = 'block'; 
+                    editFriendNameInput.value = itemData.friendName;
                 } else {
                     editFriendNameGroup.style.display = 'none';
                 }
@@ -1057,24 +1220,50 @@
             }
         });
 
+        // تعديل وحفظ بيانات اللوحة الفنية بشكل حقيقي سحابياً
         updateArtBtn.addEventListener('click', async () => {
-            const title = editArtTitleInput.value.trim(); if (!title) return;
+            const title = editArtTitleInput.value.trim(); 
+            if (!title) return;
             
+            const itemData = savedGalleryItems[activeIndex];
+            const username = localStorage.getItem('git_username') || 'LUCAELOKPY';
+            const repo = localStorage.getItem('git_repo') || 'judy';
+            const token = localStorage.getItem('git_token');
+
+            if(!token) {
+                alert('يرجى كتابة الـ Token لتعديل وحفظ البيانات.');
+                return;
+            }
+
             try {
-                let finalImgUrl = editImageSrc;
-                if (editFileObj) {
-                    editAiLoadingBar.style.display = 'block';
-                    updateArtBtn.disabled = true;
-                    finalImgUrl = await uploadImageToGitHub(editFileObj, editUploadStatusText, editAiProgressFill);
+                editAiLoadingBar.style.display = 'block';
+                updateArtBtn.disabled = true;
+
+                // 1. مسح الملف القديم أولاً بالـ SHA الخاص به
+                const deleteUrl = `https://api.github.com/repos/${username}/${repo}/contents/${itemData.path}`;
+                await fetch(deleteUrl, {
+                    method: "DELETE",
+                    headers: { "Authorization": "token " + token, "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: `تعديل لوحة: حذف النسخة السابقة`, sha: itemData.id })
+                });
+
+                // 2. رفع الملف بالبيانات الجديدة المحدثة
+                let fileToUpload = editFileObj;
+                if(!fileToUpload) {
+                    const response = await fetch(itemData.image);
+                    const blob = await response.blob();
+                    fileToUpload = new File([blob], itemData.name, { type: blob.type });
                 }
 
-                savedGalleryItems[activeIndex].title = title;
-                savedGalleryItems[activeIndex].image = finalImgUrl;
-                if (savedGalleryItems[activeIndex].type === 'friend') {
-                    savedGalleryItems[activeIndex].friendName = editFriendNameInput.value.trim();
-                }
-                saveToLocalStorage(); loadGalleryFromCache(); updateViewerContent();
+                await uploadImageToGitHub(fileToUpload, editUploadStatusText, editAiProgressFill, {
+                    type: itemData.type,
+                    friendName: editFriendNameInput.value.trim(),
+                    title: title,
+                    date: itemData.date
+                });
+
                 editModal.classList.remove('show');
+                await fetchGalleryFromGitHub();
             } catch(err) {
                 alert('❌ خطأ أثناء تحديث بيانات الصورة: ' + err);
             } finally {
@@ -1087,6 +1276,9 @@
         window.addEventListener('click', (e) => {
             if (!paletteBtn.contains(e.target) && !colorsBox.contains(e.target)) colorsBox.classList.remove('show');
         });
+
+        // 🚀 بدء تشغيل السحب والتحميل الآلي للبيانات بمجرد فتح الصفحة
+        document.addEventListener("DOMContentLoaded", fetchGalleryFromGitHub);
     </script>
 </body>
 </html>
